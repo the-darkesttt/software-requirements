@@ -1,0 +1,68 @@
+erDiagram
+    EMPLOYEE {
+        int id PK
+        string first_name
+        string last_name
+        string email UK
+        string phone
+    }
+    STORE {
+        int id PK
+        string name
+        string address
+    }
+    ROLE {
+        int id PK
+        string name UK
+    }
+    SHIFT {
+        int id PK
+        datetime start_time
+        datetime end_time
+        int capacity
+    }
+    SHIFT_ASSIGNMENT {
+        int id PK
+        datetime assigned_at
+        enum status "active, cancelled"
+    }
+    SWAP_REQUEST {
+        int id PK
+        datetime created_at
+        string reason
+    }
+    UNAVAILABILITY {
+        int id PK
+        datetime start_time
+        datetime end_time
+    }
+    SWAP_APPROVAL {
+        int id PK
+        enum approver_type "employee, manager"
+        enum decision "approved, rejected"
+        datetime decided_at
+        string rejection_reason "required on rejection"
+    }
+    SWAP_STATUS_HISTORY {
+        int id PK
+        enum previous_status "optional"
+        enum new_status
+        datetime changed_at
+        string change_reason "optional"
+    }
+
+    EMPLOYEE }o..o{ STORE : works_at
+    EMPLOYEE }o..o{ ROLE : has_role
+    STORE ||..o{ SHIFT : schedules
+    ROLE ||..o{ SHIFT : required_for
+    EMPLOYEE ||..o{ SHIFT_ASSIGNMENT : receives
+    SHIFT ||..o{ SHIFT_ASSIGNMENT : has_assignment
+    EMPLOYEE ||..o{ UNAVAILABILITY : reports
+    SHIFT_ASSIGNMENT ||..o{ SWAP_REQUEST : offered
+    SHIFT_ASSIGNMENT ||..o{ SWAP_REQUEST : requested
+    EMPLOYEE ||..o{ SWAP_REQUEST : creates
+    EMPLOYEE ||..o{ SWAP_APPROVAL : decides
+    SWAP_REQUEST ||..o{ SWAP_APPROVAL : receives_approval
+    STORE |o..o{ SWAP_APPROVAL : represented_in
+    SWAP_REQUEST ||..|{ SWAP_STATUS_HISTORY : has_status_history
+    EMPLOYEE |o..o{ SWAP_STATUS_HISTORY : changes_status
