@@ -1,0 +1,49 @@
+erDiagram
+    EMPLOYEE {
+        int id PK
+        string first_name
+        string last_name
+        string email
+        string phone
+    }
+    STORE {
+        int id PK
+        string name
+        string address
+    }
+    ROLE {
+        int id PK
+        string name
+    }
+    SHIFT {
+        int id PK
+        datetime start_time
+        datetime end_time
+    }
+    SHIFT_ASSIGNMENT {
+        int id PK
+        datetime assigned_at
+        enum status
+    }
+    SWAP_REQUEST {
+        int id PK
+        datetime created_at
+        string reason
+        enum status
+        datetime decided_at "optional"
+    }
+    UNAVAILABILITY {
+        int id PK
+        datetime start_time
+        datetime end_time
+    }
+
+    EMPLOYEE }o..o{ STORE : works_at
+    EMPLOYEE }o..o{ ROLE : has_role
+    STORE ||..o{ SHIFT : schedules
+    EMPLOYEE ||..o{ SHIFT_ASSIGNMENT : receives
+    SHIFT ||..o{ SHIFT_ASSIGNMENT : has_assignment
+    EMPLOYEE ||..o{ UNAVAILABILITY : reports
+    SHIFT_ASSIGNMENT ||..o{ SWAP_REQUEST : offered
+    SHIFT_ASSIGNMENT ||..o{ SWAP_REQUEST : requested
+    EMPLOYEE |o..o{ SWAP_REQUEST : decided_by
